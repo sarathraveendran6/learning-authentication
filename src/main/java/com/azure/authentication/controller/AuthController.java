@@ -6,15 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,6 +18,10 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    // Simulated session store (token -> username)
+    private final Map<String, String> sessionStore = new HashMap<>();
+
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
@@ -41,24 +39,25 @@ public class AuthController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return ResponseEntity.ok("Login successful");
+                String sessionToken = UUID.randomUUID().toString();
+                sessionStore.put(sessionToken, user.getUsername());
+                return ResponseEntity.ok(sessionToken);
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
 
+
     @PostMapping("/items")
-    public ResponseEntity<?> getItems(@RequestBody User loginRequest) {
-        Optional<User> userOptional = userRepository.findByUsername(loginRequest.getUsername());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                List<String> items =  Arrays.asList("Ancient Sword", "Magic Scroll", "Healing Potion");
-                return ResponseEntity.ok(items);
-            }
+    public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token) {
+        String username = sessionStore.get(token);
+        if (username != null) {
+            List<String> items = Arrays.asList("Ancient Sword", "Magic Scroll", "Healing Potion");
+            return ResponseEntity.ok(items);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired session token");
     }
+
 
 
 
