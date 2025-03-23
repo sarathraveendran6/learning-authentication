@@ -1,141 +1,51 @@
-# 🧪 Learning Authentication – From Scratch to OAuth 2.0
+This repository documents my personal journey of learning **OAuth 2.0** by incrementally building authentication systems from scratch — starting with the worst possible method and evolving toward modern standards like JWT and OAuth 2.0.
 
-This is a hands-on learning project to understand **OAuth 2.0** by starting from scratch — beginning with simple password-based authentication and evolving toward modern secure practices.
-
----
-
-## 🚀 Phase 1A: Pure Password-Based Authentication
-
-In this phase, **every API call requires the username and password**. This naive approach helps demonstrate the limitations of raw password-based auth and why more robust solutions like sessions, tokens, and OAuth exist.
+Each **phase** is captured in its own Git branch so you can explore them independently.
 
 ---
 
-## 🛠️ Tech Stack
+## 📚 Learning Phases
 
-- Java 17
-- Spring Boot
-- Spring Security (for password hashing only)
-- H2 In-Memory Database
-
----
-
-## 📌 Available APIs
-
-### 🔹 POST `/auth/register`
-Registers a new user.
-
-**Request Body**
-```json
-{
-  "username": "sarath",
-  "password": "123456"
-}
-```
+| Phase | Description | Branch |
+|-------|-------------|--------|
+| 1️⃣ Phase 1A | [Pure Password-Based Authentication](https://github.com/sarathraveendran6/learning-authentication/tree/lesson-1-pure-password) <br>Every request includes raw credentials. No sessions, no tokens — just pain. | `lesson-1-pure-password` |
+| 2️⃣ Phase 1B | Session-Based Authentication *(Coming soon)* <br>Login once, receive a session token, and use it to access protected routes. | `lesson-2-session-based` |
+| 3️⃣ Phase 2 | JWT-Based Authentication *(Coming soon)* | `lesson-3-jwt` |
+| 4️⃣ Phase 3 | OAuth 2.0 Roles & Flows *(Coming soon)* | `lesson-4-oauth` |
 
 ---
 
-### 🔹 POST `/auth/login`
-Verifies credentials.
+## 🛠 How to Explore Each Phase
 
-**Request Body**
-```json
-{
-  "username": "sarath",
-  "password": "123456"
-}
-```
-
-**Response**
-```
-Login successful
-```
-
----
-
-### 🔹 POST `/items`
-Returns a list of items **only if credentials are valid**.
-
-**Request Body**
-```json
-{
-  "username": "sarath",
-  "password": "123456"
-}
-```
-
-**Response**
-```json
-[
-  "Ancient Sword",
-  "Magic Scroll",
-  "Healing Potion"
-]
-```
-
----
-
-## ⚠️ Why This Phase Matters
-
-This phase demonstrates how raw password-based auth:
-
-- Repeats credentials on every request
-- Increases attack surface (passwords flying around)
-- Makes the client responsible for storing credentials
-
-It naturally motivates the transition to:
-- Sessions
-- Tokens (JWT)
-- OAuth and delegated auth
-
----
-
-## 🧠 Learning Roadmap
-
-> This is part of a personal initiative to **build up understanding of OAuth 2.0** from the ground up.
-
-Next steps:
-
-- ✅ Phase 1A: Password-based auth (current)
-- 🔜 Phase 1B: Session-based auth
-- 🔜 Phase 2: Stateless auth with JWT
-- 🔜 Phase 3: Introducing OAuth 2.0 roles (Client, Auth Server, Resource Server)
-- 🔜 Phase 4: Authorization Code Flow
-- 🔜 Phase 5: PKCE and refresh tokens
-
----
-
-## ▶️ How to Run
-
-Clone the repo and run:
+To check out and run a phase:
 
 ```bash
+git clone https://github.com/sarathraveendran6/learning-authentication.git
+cd learning-authentication
+git checkout lesson-1-pure-password
 ./mvnw spring-boot:run
 ```
 
-App will be available at `http://localhost:8080`
+Replace the branch name with any phase you'd like to explore.
 
 ---
 
 ## ✍️ Blog Series
 
-Stay tuned for the blog series documenting this journey.
+This project is accompanied by a blog series published on Medium:
 
-```
-From Plain Passwords to OAuth: A Hands-On Learning Path
-```
+- [Why I Started With the Worst Way to Authenticate](https://medium.com/@sarathraveendran6/why-i-started-with-the-worst-way-to-authenticate-and-why-you-should-too-acd5ef1715f0)
+
+More articles coming soon as each phase progresses.
 
 ---
 
-## 📁 Repository Structure
+## 🙌 Contributing
 
-| Folder/File       | Description                                |
-|-------------------|--------------------------------------------|
-| `src/`            | Main Java source code                      |
-| `AuthController`  | Handles registration, login, and item auth |
-| `User` entity     | Represents users in the system             |
+This is a personal learning project, but feel free to fork, follow along, and suggest improvements!
 
 ---
 
 ## 📬 License
 
-MIT — feel free to fork, learn, and build on top!
+MIT — clone, learn, remix, and share!
