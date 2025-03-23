@@ -1,30 +1,31 @@
-# 🧪 Learning Authentication – From Scratch to OAuth 2.0
+# 🗝️ Phase 1B – Session-Based Authentication
 
-This is a hands-on learning project to understand **OAuth 2.0** by starting from scratch — beginning with simple password-based authentication and evolving toward modern secure practices.
+This branch demonstrates the second step in learning authentication: using **session-based authentication** instead of sending credentials with every request.
 
----
+In the previous phase (Lesson 1), we sent the **username and password on every API call**, exposing the risk of credential leaks and making the system stateless and insecure.
 
-## 🚀 Phase 1A: Pure Password-Based Authentication
+In this phase, we simulate a **session mechanism** where:
 
-In this phase, **every API call requires the username and password**. This naive approach helps demonstrate the limitations of raw password-based auth and why more robust solutions like sessions, tokens, and OAuth exist.
-
----
-
-## 🛠️ Tech Stack
-
-- Java 17
-- Spring Boot
-- Spring Security (for password hashing only)
-- H2 In-Memory Database
+- The user logs in once using `/auth/login`
+- A **random UUID-based session token** is generated and returned
+- This token is stored in a server-side map (`sessionStore`)
+- All future API calls require this token in the `Authorization` header
 
 ---
 
-## 📌 Available APIs
+## 📦 What This Phase Teaches
 
-### 🔹 POST `/auth/register`
+✅ Why sending raw credentials repeatedly is insecure  
+✅ How session tokens simulate "logged in" state  
+✅ How servers can validate users without storing passwords in memory or requiring them every time
+
+---
+
+## 🔧 APIs
+
+### 🔹 `POST /auth/register`
 Registers a new user.
 
-**Request Body**
 ```json
 {
   "username": "sarath",
@@ -34,10 +35,9 @@ Registers a new user.
 
 ---
 
-### 🔹 POST `/auth/login`
-Verifies credentials.
+### 🔹 `POST /auth/login`
+Authenticates the user and returns a **session token**.
 
-**Request Body**
 ```json
 {
   "username": "sarath",
@@ -45,25 +45,22 @@ Verifies credentials.
 }
 ```
 
-**Response**
+✅ Response:
 ```
-Login successful
+07f964b1-07dc-43a1-aef0-518c55a0c646
 ```
 
 ---
 
-### 🔹 POST `/items`
-Returns a list of items **only if credentials are valid**.
+### 🔹 `POST /auth/items`
+Returns a list of items if the request contains a **valid session token**.
 
-**Request Body**
-```json
-{
-  "username": "sarath",
-  "password": "123456"
-}
+**Headers:**
+```
+Authorization: 07f964b1-07dc-43a1-aef0-518c55a0c646
 ```
 
-**Response**
+✅ Response:
 ```json
 [
   "Ancient Sword",
@@ -74,68 +71,39 @@ Returns a list of items **only if credentials are valid**.
 
 ---
 
-## ⚠️ Why This Phase Matters
+## 🧠 Why This Matters
 
-This phase demonstrates how raw password-based auth:
+Session-based auth is still used widely (especially in traditional web apps). While not perfect, it's a huge improvement over raw Basic Auth or credential-passing.
 
-- Repeats credentials on every request
-- Increases attack surface (passwords flying around)
-- Makes the client responsible for storing credentials
-
-It naturally motivates the transition to:
-- Sessions
-- Tokens (JWT)
-- OAuth and delegated auth
+You’ll see:
+- Tokens replace credentials
+- The server keeps track of logged-in users
+- Simpler state handling before moving to stateless JWTs
 
 ---
 
-## 🧠 Learning Roadmap
-
-> This is part of a personal initiative to **build up understanding of OAuth 2.0** from the ground up.
-
-Next steps:
-
-- ✅ Phase 1A: Password-based auth (current)
-- 🔜 Phase 1B: Session-based auth
-- 🔜 Phase 2: Stateless auth with JWT
-- 🔜 Phase 3: Introducing OAuth 2.0 roles (Client, Auth Server, Resource Server)
-- 🔜 Phase 4: Authorization Code Flow
-- 🔜 Phase 5: PKCE and refresh tokens
-
----
-
-## ▶️ How to Run
-
-Clone the repo and run:
+## 🏃‍♂️ How to Run
 
 ```bash
+git clone https://github.com/sarathraveendran6/learning-authentication.git
+cd learning-authentication
+git checkout lesson-2-session-based
 ./mvnw spring-boot:run
 ```
 
-App will be available at `http://localhost:8080`
+---
+
+## ✍️ Blog Post (coming soon)
+This phase will be explained in an upcoming blog post.
 
 ---
 
-## ✍️ Blog Series
+## 🔄 Previous Phase
 
-Stay tuned for the blog series documenting this journey.
-
-```
-From Plain Passwords to OAuth: A Hands-On Learning Path
-```
-
----
-
-## 📁 Repository Structure
-
-| Folder/File       | Description                                |
-|-------------------|--------------------------------------------|
-| `src/`            | Main Java source code                      |
-| `AuthController`  | Handles registration, login, and item auth |
-| `User` entity     | Represents users in the system             |
+- [Lesson 1: Pure Password-Based Authentication](https://github.com/sarathraveendran6/learning-authentication/tree/lesson-1-pure-password)
 
 ---
 
 ## 📬 License
 
-MIT — feel free to fork, learn, and build on top!
+MIT — clone, learn, remix, share!
