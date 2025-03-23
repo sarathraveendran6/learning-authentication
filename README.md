@@ -93,8 +93,8 @@ git checkout lesson-2-session-based
 
 ---
 
-## ✍️ Blog Post (coming soon)
-This phase will be explained in an upcoming blog post.
+## ✍️ Blog Post 
+- [Why Session-Based Auth Was My Next Step After Basic Login](https://medium.com/@sarathraveendran6/why-session-based-auth-was-my-next-step-after-basic-login-a6d2e933eb12)
 
 ---
 
