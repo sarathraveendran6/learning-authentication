@@ -2,6 +2,7 @@ package com.azure.authentication.controller;
 
 import com.azure.authentication.entity.User;
 import com.azure.authentication.repo.UserRepository;
+import com.azure.authentication.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Simulated session store (token -> username)
-    private final Map<String, String> sessionStore = new HashMap<>();
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     @PostMapping("/register")
@@ -39,9 +41,8 @@ public class AuthController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                String sessionToken = UUID.randomUUID().toString();
-                sessionStore.put(sessionToken, user.getUsername());
-                return ResponseEntity.ok(sessionToken);
+                String jwt = jwtUtil.generateToken(user.getUsername());
+                return ResponseEntity.ok(jwt);
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
@@ -50,12 +51,21 @@ public class AuthController {
 
     @PostMapping("/items")
     public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token) {
-        String username = sessionStore.get(token);
-        if (username != null) {
-            List<String> items = Arrays.asList("Ancient Sword", "Magic Scroll", "Healing Potion");
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        if (jwtUtil.isTokenValid(token)) {
+            String username = jwtUtil.extractUsername(token);
+            List<String> items = Arrays.asList(
+                    "Ancient Sword for " + username,
+                    "Magic Scroll",
+                    "Healing Potion"
+            );
             return ResponseEntity.ok(items);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired session token");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired JWT");
     }
 
 
