@@ -1,0 +1,11 @@
+<h2>Access Token</h2>
+<pre th:text="${token}">Token goes here</pre>
+
+<h2 th:if="${items != null}">Fetched Items</h2>
+<ul th:if="${items != null}">
+    <li th:each="item : ${items}" th:text="${item}"></li>
+</ul>
+
+<p th:if="${error}" style="color:red">
+    Error: <span th:text="${error}"></span>
+</p>
